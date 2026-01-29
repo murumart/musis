@@ -5,10 +5,14 @@
 
 #include "ext/rtmidi-6.0.0/rtmidi_c.h"
 
-// ass
-#include <synchapi.h>
+#include "ext/sokol/sokol_app.h"
+#include "ext/sokol/sokol_log.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
+
+struct {
+	RtMidiInPtr midiIn;
+} Context;
 
 void midiInCallback(double timeStamp, const unsigned char *message, size_t messageSize, void *userData) {
 	(void)userData;
@@ -17,38 +21,46 @@ void midiInCallback(double timeStamp, const unsigned char *message, size_t messa
 	snprintf(buf, min(messageSize, 1024), "%s", (char *)message);
 }
 
-int main(void) {
-
+void init(void) {
 	puts("Hello from musis");
-
-	RtMidiInPtr in = rtmidi_in_create(RTMIDI_API_UNSPECIFIED, "noone", 100);
-
-	uint32_t ports = rtmidi_get_port_count(in);
+	Context.midiIn = rtmidi_in_create(RTMIDI_API_UNSPECIFIED, "noone", 100);
+	uint32_t ports = rtmidi_get_port_count(Context.midiIn);
 	printf("There are %u ports\n", ports);
 	if (ports == 0) {
-		rtmidi_in_free(in);
+		rtmidi_in_free(Context.midiIn);
 		puts("No ports available. Bye");
-		return 0;
+		abort();
 	}
-	rtmidi_open_port(in, 0, "noone");
+	rtmidi_open_port(Context.midiIn, 0, "noone");
 	// rtmidi_in_set_callback(in, midiInCallback, NULL);
-	rtmidi_in_ignore_types(in, false, false, false);
+	rtmidi_in_ignore_types(Context.midiIn, false, false, false);
+}
 
+void frame(void) {
 	unsigned char msg[1024];
 	size_t	      msgsize = 0;
-	while (2) {
-		rtmidi_in_get_message(in, msg, &msgsize);
-		printf("message size: %zu\n", msgsize);
+	rtmidi_in_get_message(Context.midiIn, msg, &msgsize);
+	printf("message size: %zu\n", msgsize);
 
-		fflush(stdout);
-		Sleep(10);
-	}
+	fflush(stdout);
+}
 
-	int lol = 0;
-	scanf("%d", &lol);
-
-	rtmidi_in_free(in);
+void cleanup(void) {
+	rtmidi_in_free(Context.midiIn);
 	puts("Goodbye.");
+}
 
-	return 0;
+sapp_desc sokol_main(int argc, char **argv) {
+	(void)argc;
+	(void)argv;
+	return (sapp_desc){
+		.init_cb = init,
+		.frame_cb = frame,
+		.cleanup_cb = cleanup,
+		.width = 640,
+		.height = 480,
+		.window_title = "Musis",
+		.icon.sokol_default = true,
+		.logger.func = slog_func,
+	};
 }
