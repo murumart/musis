@@ -1,6 +1,6 @@
 .cache
 ext/rtmidi*
-ext/sokol/*
+ext/gfx/*
 *.zip
 *.exe
 *.o

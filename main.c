@@ -5,8 +5,8 @@
 
 #include "ext/rtmidi-6.0.0/rtmidi_c.h"
 
-#include "ext/sokol/sokol_app.h"
-#include "ext/sokol/sokol_log.h"
+#include "ext/gfx/sokol_app.h"
+#include "ext/gfx/sokol_log.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
