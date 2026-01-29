@@ -1,8 +1,9 @@
 
 
 CC := gcc
-CCFLAGS := -Wall -Wextra -Werror -g
-CCFLAGS += -lstdc++ -lwinmm
+LDFLAGS := -lstdc++ -lwinmm -ldxgi -ld3d11 -lgdi32
+CCFLAGS := -Wall -Wextra -Werror -g -D_WIN32
+CCFLAGS += $(LDFLAGS)
 
 PROGRAM := musis
 PROGSRC := main.c
@@ -14,7 +15,7 @@ CXXFLAGS += -DRTMIDI_DEBUG
 
 SOKOLZIP := ext/sokol.zip
 SOKOLDIR := ext/sokol
-SOKOLSRC := $(SOKOLDIR)/sokol_app.h
+SOKOLOBJ := ext/sokol_implementation.o
 
 RTMIDIZIP := ext/rtmidi.zip
 RTMIDIDIR := ext/rtmidi-6.0.0
@@ -23,8 +24,8 @@ RTMIDISRC := $(patsubst %.o,%.cpp,$(RTMIDIOBJ))
 
 all: $(PROGRAM) $(RTMIDIOBJ) $(PROGDEP)
 
-$(PROGRAM): $(RTMIDIOBJ) $(PROGDEP)
-	$(CC) $(PROGSRC) $(RTMIDIOBJ) -o $(PROGRAM) $(CCFLAGS)
+$(PROGRAM): $(RTMIDIOBJ) $(SOKOLOBJ) $(PROGDEP)
+	$(CC) $(PROGSRC) $(RTMIDIOBJ) $(SOKOLOBJ) -o $(PROGRAM) $(CCFLAGS)
 
 # windowing/graphics library stuff
 
@@ -36,6 +37,9 @@ $(SOKOLSRC):
 	mv $(SOKOLDIR)/temp/sokol-53b78dd7e85c8c62622e2f7adfb63fc32814dfc4/* $(SOKOLDIR)
 
 # midi library stuff
+
+$(SOKOLOBJ): $(patsubst %.o,%.c,$(SOKOLOBJ))
+	$(CC) $(patsubst %.o,%.c,$(SOKOLOBJ)) -c -o $(SOKOLOBJ) -g
 
 $(RTMIDIOBJ): $(RTMIDISRC)
 	@echo "Compiling RtMidi object file $@"

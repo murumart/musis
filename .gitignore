@@ -1,6 +1,7 @@
 .cache
 ext/rtmidi*
 ext/sokol/*
-ext/sokol.zip
+*.zip
 *.exe
+*.o
 compile_commands.json
