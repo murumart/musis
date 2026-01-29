@@ -10,15 +10,16 @@ PROGDEP :=
 
 CXX := g++
 CXXFLAGS := -lwinmm -Wall -D__WINDOWS_MM__ -static -std=c++11
+CXXFLAGS += -DRTMIDI_DEBUG
 
 RTMIDIZIP := ext/rtmidi.zip
 RTMIDIDIR := ext/rtmidi-6.0.0
 RTMIDIOBJ := $(RTMIDIDIR)/RtMidi.o $(RTMIDIDIR)/rtmidi_c.o
 RTMIDISRC := $(patsubst %.o,%.cpp,$(RTMIDIOBJ))
 
-all: $(PROGRAM)* $(RTMIDIOBJ) $(PROGDEP)
+all: $(PROGRAM) $(RTMIDIOBJ) $(PROGDEP)
 
-$(PROGRAM)*: $(RTMIDIOBJ) $(PROGDEP)
+$(PROGRAM): $(RTMIDIOBJ) $(PROGDEP)
 	$(CC) $(PROGSRC) $(RTMIDIOBJ) -o $(PROGRAM) $(CCFLAGS)
 
 $(RTMIDIOBJ): $(RTMIDISRC)

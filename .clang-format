@@ -1,0 +1,31 @@
+---
+AlignConsecutiveDeclarations:
+  Enabled: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+BinPackArguments: false
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+IndentWidth: 8
+ContinuationIndentWidth: 8
+TabWidth: 8
+UseTab: Always
+PenaltyBreakComment: 99
+MaxEmptyLinesToKeep: 2
+KeepEmptyLines:
+  AtEndOfFile: true
+InsertNewlineAtEOF: true
+BreakBeforeBraces: Custom
+AllowAllArgumentsOnNextLine: false
+AlignConsecutiveAssignments:
+  Enabled: false
+AlignAfterOpenBracket: BlockIndent
+BreakBeforeBinaryOperators: All
+BreakBeforeTernaryOperators: true
+BreakFunctionDefinitionParameters: false
+ColumnLimit: 0
+Cpp11BracedListStyle: true
+PointerAlignment: Right
